@@ -2,6 +2,7 @@ package ro.var.libmngmt.models.user;
 
 import ro.var.libmngmt.models.book.BorrowedBook;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -10,11 +11,10 @@ public class Client extends User {
     private BorrowedBook currentBorrowedBook;
     private boolean isActive;
 
-    public Client(int id, String firstName, String lastName, String user, String email, List<BorrowedBook> borrowedBooks,
-                  BorrowedBook currentBorrowedBook, boolean isActive) {
+    public Client(int id, String firstName, String lastName, String user, String email, boolean isActive) {
         super(id, firstName, lastName, user, email, UserType.CLIENT);
-        this.borrowedBooks = borrowedBooks;
-        this.currentBorrowedBook = currentBorrowedBook;
+        this.borrowedBooks = new ArrayList<>();
+        this.currentBorrowedBook = new BorrowedBook();
         this.isActive = isActive;
     }
 
