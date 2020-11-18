@@ -17,12 +17,12 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MySimpleUrlAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
+public class SimpleAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
     protected final Log logger = LogFactory.getLog(this.getClass());
     private final RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
 
-    public MySimpleUrlAuthenticationSuccessHandler() {
+    public SimpleAuthenticationSuccessHandler() {
         super();
     }
 

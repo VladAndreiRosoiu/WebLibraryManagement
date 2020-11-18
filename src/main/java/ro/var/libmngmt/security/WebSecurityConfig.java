@@ -35,12 +35,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                 .antMatchers("/anonymous*").anonymous()
-                .antMatchers("/login*").permitAll()
+                .antMatchers("/login", "/welcome").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
                 .permitAll()
-                .loginPage("/login.html")
+                .loginPage("/login")
                 .loginProcessingUrl("/login")
                 .successHandler(myAuthenticationSuccessHandler())
                 .failureUrl("/login.html?error=true")
@@ -50,12 +50,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .rememberMe().key("uniqueAndSecret").tokenValiditySeconds(86400)
                 .and()
                 .csrf().disable()
+                .logout()
+                .logoutSuccessUrl("/login")
         ;
     }
 
     @Bean
-    public AuthenticationSuccessHandler myAuthenticationSuccessHandler(){
-        return new MySimpleUrlAuthenticationSuccessHandler();
+    public AuthenticationSuccessHandler myAuthenticationSuccessHandler() {
+        return new SimpleAuthenticationSuccessHandler();
     }
 
 }
