@@ -9,7 +9,7 @@ import ro.var.libmngmt.models.book.BorrowedBook;
 import javax.persistence.Entity;
 import java.util.List;
 
-@NoArgsConstructor
+
 @Getter
 @Setter
 @ToString
@@ -26,7 +26,10 @@ public class Client extends User {
 //    }
 
 
-    public Client(int id, String firstName, String lastName, String username, String email) {
-        super(id, firstName, lastName, username, email, Roles.ROLE_USER);
+    public Client() {
+    }
+
+    public Client(int id, String firstName, String lastName, String username, String email, Roles role) {
+        super(id, firstName, lastName, username, email, role);
     }
 }
