@@ -1,15 +1,7 @@
 package ro.var.libmngmt.models.book;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import javax.persistence.*;
 
-
-@AllArgsConstructor
-@NoArgsConstructor
-@Data
 @Entity
 @Table(name = "genre")
 public class Genre {
@@ -19,4 +11,28 @@ public class Genre {
     private int id;
     @Column(name = "genre_type", unique = true)
     private String genreType;
+
+    public Genre() {
+    }
+
+    public Genre(int id, String genreType) {
+        this.id = id;
+        this.genreType = genreType;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getGenreType() {
+        return genreType;
+    }
+
+    public void setGenreType(String genreType) {
+        this.genreType = genreType;
+    }
 }
