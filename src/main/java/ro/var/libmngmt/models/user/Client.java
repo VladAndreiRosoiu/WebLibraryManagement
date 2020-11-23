@@ -1,6 +1,5 @@
 package ro.var.libmngmt.models.user;
 
-import ro.var.libmngmt.models.book.BorrowedBook;
 
 import javax.persistence.*;
 import java.util.List;

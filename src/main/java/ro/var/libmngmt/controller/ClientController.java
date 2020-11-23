@@ -16,7 +16,11 @@ import ro.var.libmngmt.repository.*;
 import java.util.Optional;
 
 @Controller
+//@RequestMapping("/homepage") -- check if works only with rest controllers
 public class ClientController {
+
+//    add service package
+//    private final BookService bookService;
 
     @Autowired
     BookRepository bookRepository;
@@ -27,9 +31,7 @@ public class ClientController {
     @Autowired
     ClientRepository clientRepository;
     @Autowired
-    BorrowedBookRepository borrowedBookRepository;
-    @Autowired
-    BorrowedBookByClientRepository borrowedBookByClientRepository;
+    BorrowHistoryRepository borrowHistoryRepository;
 
     @GetMapping("/homepage")
     public String getHomepage() {
@@ -53,12 +55,10 @@ public class ClientController {
                 System.out.println("Genre -> " + genre.getGenreType() + "!");
             }
         }
-        for (BorrowedBook borrowedBook : borrowedBookRepository.findAll()) {
-            System.out.println(borrowedBook.getBook().getTitle() + ", borrowed on " + borrowedBook.getBorrowedOn() + ", returned on " + borrowedBook.getReturnedOn());
+        for (BorrowHistory borrowHistory : borrowHistoryRepository.findAll()) {
+            System.out.println(borrowHistory.getBook().getTitle() + ", borrowed by "  + borrowHistory.getClient().getFirstName() + " " + borrowHistory.getClient().getLastName());
         }
-        for (BorrowedBookByClient borrowedBookByClient : borrowedBookByClientRepository.findAll()) {
-            System.out.println(borrowedBookByClient.getClient().getFirstName()+", " + borrowedBookByClient.getBook().getTitle() + ", borrowed on " + borrowedBookByClient.getBorrowedOn() + ", returned on " + borrowedBookByClient.getReturnedOn());
-        }
+
         return "displayBooksForClient";
     }
 
