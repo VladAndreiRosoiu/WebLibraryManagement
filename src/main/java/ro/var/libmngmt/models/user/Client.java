@@ -2,11 +2,10 @@ package ro.var.libmngmt.models.user;
 
 import ro.var.libmngmt.models.book.BorrowedBook;
 
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
+import javax.persistence.*;
 import java.util.List;
 
-@Entity(name = "client")
+@Entity()
 @DiscriminatorValue("ROLE_USER")
 public class Client extends User {
 
@@ -17,6 +16,7 @@ public class Client extends User {
     }
 
     public Client(int id, String firstName, String lastName, String username, String password, String email) {
-        super(id, firstName, lastName, username, password, email, Roles.ROLE_USER);
+        super(id, firstName, lastName, username, password, email);
     }
+
 }

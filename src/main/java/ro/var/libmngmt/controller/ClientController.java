@@ -9,16 +9,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import ro.var.libmngmt.exceptions.BookNotFoundEx;
-import ro.var.libmngmt.models.book.Author;
-import ro.var.libmngmt.models.book.Book;
-import ro.var.libmngmt.models.book.Genre;
-import ro.var.libmngmt.repository.AuthorRepository;
-import ro.var.libmngmt.repository.BookRepository;
-import ro.var.libmngmt.repository.ClientRepository;
-import ro.var.libmngmt.repository.GenreRepository;
+import ro.var.libmngmt.models.book.*;
+import ro.var.libmngmt.models.user.Client;
+import ro.var.libmngmt.repository.*;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -32,6 +26,10 @@ public class ClientController {
     GenreRepository genreRepository;
     @Autowired
     ClientRepository clientRepository;
+    @Autowired
+    BorrowedBookRepository borrowedBookRepository;
+    @Autowired
+    BorrowedBookByClientRepository borrowedBookByClientRepository;
 
     @GetMapping("/homepage")
     public String getHomepage() {
@@ -41,15 +39,25 @@ public class ClientController {
     @GetMapping("/homepage/showbooks")
     public String getBooks(Model bookModel) {
         bookModel.addAttribute("books", bookRepository.findAll());
-        for(Book book: bookRepository.findAll()){
-            System.out.println("Book " + book.getTitle());
-            System.out.println("With");
-            for (Author author:book.getAuthors()){
-                System.out.println("Author : " + author.getFirstName() +" " + author.getLastName()+ "!");
+        for (Client client : clientRepository.findAll()){
+            System.out.println(client.getId()+ ", " + client.getFirstName() + " " + client.getLastName() + " " + client.getEmail());
+        }
+        for (Book book : bookRepository.findAll()) {
+            System.out.println("Book -> " + book.getTitle());
+            System.out.println("Authors : ");
+            for (Author author : book.getAuthors()) {
+                System.out.println("Author -> " + author.getFirstName() + " " + author.getLastName() + "!");
             }
-            for(Genre genre:book.getGenres()){
-                System.out.println("Genre " + genre.getGenreType()+"!");
+            System.out.println("Genres : ");
+            for (Genre genre : book.getGenres()) {
+                System.out.println("Genre -> " + genre.getGenreType() + "!");
             }
+        }
+        for (BorrowedBook borrowedBook : borrowedBookRepository.findAll()) {
+            System.out.println(borrowedBook.getBook().getTitle() + ", borrowed on " + borrowedBook.getBorrowedOn() + ", returned on " + borrowedBook.getReturnedOn());
+        }
+        for (BorrowedBookByClient borrowedBookByClient : borrowedBookByClientRepository.findAll()) {
+            System.out.println(borrowedBookByClient.getClient().getFirstName()+", " + borrowedBookByClient.getBook().getTitle() + ", borrowed on " + borrowedBookByClient.getBorrowedOn() + ", returned on " + borrowedBookByClient.getReturnedOn());
         }
         return "displayBooksForClient";
     }

@@ -1,13 +1,15 @@
 package ro.var.libmngmt.models.user;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Objects;
 
-@Entity(name = "user")
+@Entity()
+@Table(name = "users")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name="user_role",
+@DiscriminatorColumn(name = "user_role",
         discriminatorType = DiscriminatorType.STRING)
-public abstract class User {
+public abstract class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", unique = true)
@@ -26,7 +28,7 @@ public abstract class User {
     public User() {
     }
 
-    public User(int id, String firstName, String lastName, String username, String password, String email, Roles role) {
+    public User(int id, String firstName, String lastName, String username, String password, String email) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
