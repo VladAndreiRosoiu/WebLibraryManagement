@@ -26,16 +26,16 @@ public class Book implements Serializable {
     private long isbn;
     @Column(name = "stock")
     private int stock;
-//    @ManyToMany(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
-//    @JoinTable(name = "book_author",
-//            joinColumns = {@JoinColumn(name = "id_book")},
-//            inverseJoinColumns = {@JoinColumn(name = "id_author")})
-//    private List<Author> authors;
-//    @ManyToMany(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
-//    @JoinTable(name = "book_genre",
-//            joinColumns = {@JoinColumn(name = "id_book")},
-//            inverseJoinColumns = {@JoinColumn(name = "id_genre")})
-//    private List<String> genres;
+    @OneToMany(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
+    @JoinTable(name = "book_author",
+            joinColumns = {@JoinColumn(name = "id_book")},
+            inverseJoinColumns = {@JoinColumn(name = "id_author")})
+    private List<Author> authors;
+    @OneToMany(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
+    @JoinTable(name = "book_genre",
+            joinColumns = {@JoinColumn(name = "id_book")},
+            inverseJoinColumns = {@JoinColumn(name = "id_genre")})
+    private List<Genre> genres;
     @Column(name = "release_date")
     private LocalDate releaseDate;
 

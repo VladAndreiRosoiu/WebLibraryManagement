@@ -102,7 +102,9 @@ VALUES
 (7,8),
 (8,9),
 (8,10),
-(8,11);
+(9,11),
+(9,12),
+(9,13);
 
 INSERT INTO libraryWebDB.genre (genre_type)
 VALUES

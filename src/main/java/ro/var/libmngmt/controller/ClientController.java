@@ -8,12 +8,17 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import ro.var.libmngmt.exceptions.BookNotFoundEx;
+import ro.var.libmngmt.models.book.Author;
 import ro.var.libmngmt.models.book.Book;
+import ro.var.libmngmt.models.book.Genre;
 import ro.var.libmngmt.repository.AuthorRepository;
 import ro.var.libmngmt.repository.BookRepository;
 import ro.var.libmngmt.repository.ClientRepository;
 import ro.var.libmngmt.repository.GenreRepository;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -29,13 +34,23 @@ public class ClientController {
     ClientRepository clientRepository;
 
     @GetMapping("/homepage")
-    public String getConsole() {
+    public String getHomepage() {
         return "homepage";
     }
 
     @GetMapping("/homepage/showbooks")
-    public String getBooks(Model model) {
-        model.addAttribute("books", bookRepository.findAll());
+    public String getBooks(Model bookModel) {
+        bookModel.addAttribute("books", bookRepository.findAll());
+        for(Book book: bookRepository.findAll()){
+            System.out.println("Book " + book.getTitle());
+            System.out.println("With");
+            for (Author author:book.getAuthors()){
+                System.out.println("Author : " + author.getFirstName() +" " + author.getLastName()+ "!");
+            }
+            for(Genre genre:book.getGenres()){
+                System.out.println("Genre " + genre.getGenreType()+"!");
+            }
+        }
         return "displayBooksForClient";
     }
 
@@ -47,7 +62,7 @@ public class ClientController {
             genreModel.addAttribute("genres", genreRepository.findAllById(genreRepository.getGenreId(id)));
             return "viewBookDetails";
         } else {
-            throw new IndexOutOfBoundsException("Book not found!");
+            throw new BookNotFoundEx("Book not found!");
         }
     }
 

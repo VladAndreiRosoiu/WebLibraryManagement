@@ -20,15 +20,16 @@
             <th>Book ISBN</th>
             <th>Book Release date</th>
             <th>Book Stock</th>
+            <th>Book Author</th>
             <th>Actions</th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="book: ${books}">
             <td th:text="${book.title}">Book Title</td>
-            <td th:text="${book.isbn}">Book Title</td>
-            <td th:text="${book.releaseDate}">Book Title</td>
-            <td th:text="${book.stock}">Book Title</td>
+            <td th:text="${book.isbn}">Book ISBN</td>
+            <td th:text="${book.releaseDate}">Book Release Date</td>
+            <td th:text="${book.stock}">Book Stock</td>
             <td>
                 <a th:href="@{/homepage/viewbookdetails/{id}(id=${book.id})}" class="mr-2">View Book Details</a>
             </td>
