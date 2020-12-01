@@ -55,8 +55,8 @@ public class ClientController {
                 System.out.println("Genre -> " + genre.getGenreType() + "!");
             }
         }
-        for (BorrowHistory borrowHistory : borrowHistoryRepository.findAll()) {
-            System.out.println(borrowHistory.getBook().getTitle() + ", borrowed by "  + borrowHistory.getClient().getFirstName() + " " + borrowHistory.getClient().getLastName());
+        for (BorrowedBook borrowedBook : borrowHistoryRepository.findAll()) {
+            System.out.println(borrowedBook.getBook().getTitle() + ", borrowed by "  + borrowedBook.getClient().getFirstName() + " " + borrowedBook.getClient().getLastName());
         }
 
         return "displayBooksForClient";

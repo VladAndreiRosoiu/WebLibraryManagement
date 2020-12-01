@@ -5,8 +5,8 @@ import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "book_user")
-public class BorrowHistory {
+@Table(name = "borrow_info")
+public class BorrowedBook {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -18,18 +18,16 @@ public class BorrowHistory {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_user")
     private Client client;
-//    @OneToOne
-//    @JoinColumn(name = "borrowed_on")
-//    private LocalDate borrowedOn;
-//    @OneToOne
-//    @JoinColumn(name = "returned_on")
-//    private LocalDate returnedOn;
+    @Column(name = "borrowed_on")
+    private LocalDate borrowedOn;
+    @Column(name = "returned_on")
+    private LocalDate returnedOn;
 
 
-    public BorrowHistory() {
+    public BorrowedBook() {
     }
 
-    public BorrowHistory(Book book, Client client) {
+    public BorrowedBook(Book book, Client client) {
         this.book = book;
         this.client = client;
 
@@ -59,4 +57,19 @@ public class BorrowHistory {
         this.client = client;
     }
 
+    public LocalDate getBorrowedOn() {
+        return borrowedOn;
+    }
+
+    public void setBorrowedOn(LocalDate borrowedOn) {
+        this.borrowedOn = borrowedOn;
+    }
+
+    public LocalDate getReturnedOn() {
+        return returnedOn;
+    }
+
+    public void setReturnedOn(LocalDate returnedOn) {
+        this.returnedOn = returnedOn;
+    }
 }

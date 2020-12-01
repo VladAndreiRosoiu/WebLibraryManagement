@@ -1,6 +1,8 @@
 package ro.var.libmngmt.models.user;
 
 
+import ro.var.libmngmt.models.book.BorrowedBook;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -8,7 +10,11 @@ import java.util.List;
 @DiscriminatorValue("ROLE_USER")
 public class Client extends User {
 
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "id")
 //    private List<BorrowedBook> borrowedBooks;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "id_book")
 //    private BorrowedBook currentBorrowedBook;
 
     public Client() {
