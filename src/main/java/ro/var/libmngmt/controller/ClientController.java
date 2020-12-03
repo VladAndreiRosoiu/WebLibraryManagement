@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import ro.var.libmngmt.exceptions.BookNotFoundEx;
+import ro.var.libmngmt.models.BorrowHistory;
 import ro.var.libmngmt.models.book.*;
 import ro.var.libmngmt.models.user.Client;
 import ro.var.libmngmt.repository.*;
@@ -55,8 +56,8 @@ public class ClientController {
                 System.out.println("Genre -> " + genre.getGenreType() + "!");
             }
         }
-        for (BorrowedBook borrowedBook : borrowHistoryRepository.findAll()) {
-            System.out.println(borrowedBook.getBook().getTitle() + ", borrowed by "  + borrowedBook.getClient().getFirstName() + " " + borrowedBook.getClient().getLastName());
+        for (BorrowHistory borrowHistory : borrowHistoryRepository.findAll()) {
+            System.out.println(borrowHistory.getBook().getTitle() + ", borrowed by "  + borrowHistory.getClient().getFirstName() + " " + borrowHistory.getClient().getLastName() + "borrowed on " + borrowHistory.getBorrowedOn() + "returned on " + borrowHistory.getReturnedOn());
         }
 
         return "displayBooksForClient";
@@ -78,6 +79,11 @@ public class ClientController {
     public String getClientDetails(Model clientModel) {
         SecurityContext sc = SecurityContextHolder.getContext();
         clientModel.addAttribute("client", clientRepository.getClient(sc.getAuthentication().getName()));
+
+        for (BorrowHistory borrowHistory : clientRepository.getClient(sc.getAuthentication().getName()).getBorrowHistory()){
+            System.out.println(borrowHistory.getBook().getTitle() + borrowHistory.getBorrowedOn() + borrowHistory .getReturnedOn());
+        }
+
         return "viewClientDetails";
     }
 

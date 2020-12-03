@@ -1,4 +1,5 @@
-package ro.var.libmngmt.models.book;
+package ro.var.libmngmt.models;
+import ro.var.libmngmt.models.book.Book;
 import ro.var.libmngmt.models.user.Client;
 
 import javax.persistence.*;
@@ -6,7 +7,7 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name = "borrow_info")
-public class BorrowedBook {
+public class BorrowHistory {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -15,8 +16,10 @@ public class BorrowedBook {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_book")
     private Book book;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_user")
+    @OneToOne(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
+    @JoinTable(name = "borrow_user",
+            joinColumns = {@JoinColumn(name = "id_borrow_info")},
+            inverseJoinColumns = {@JoinColumn(name = "id_user")})
     private Client client;
     @Column(name = "borrowed_on")
     private LocalDate borrowedOn;
@@ -24,10 +27,10 @@ public class BorrowedBook {
     private LocalDate returnedOn;
 
 
-    public BorrowedBook() {
+    public BorrowHistory() {
     }
 
-    public BorrowedBook(Book book, Client client) {
+    public BorrowHistory(Book book, Client client) {
         this.book = book;
         this.client = client;
 

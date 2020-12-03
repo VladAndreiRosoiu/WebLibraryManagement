@@ -52,12 +52,18 @@ FOREIGN KEY (id_genre) REFERENCES genre(id));
 
 CREATE TABLE borrow_info(
 id INT PRIMARY KEY AUTO_INCREMENT,
-id_user INT NOT NULL,
 id_book INT NOT NULL,
 borrowed_on DATE NOT NULL,
 returned_on DATE,
-FOREIGN KEY (id_user) REFERENCES users(id),
 FOREIGN KEY (id_book) REFERENCES books(id)
+);
+
+CREATE TABLE borrow_user(
+id INT PRIMARY KEY AUTO_INCREMENT,
+id_user INT NOT NULL,
+id_borrow_info INT NOT NULL,
+FOREIGN KEY (id_user) REFERENCES users(id),
+FOREIGN KEY (id_borrow_info) references borrow_info (id)
 );
 
 -- CREATE TABLE borrow_info(
@@ -182,19 +188,31 @@ VALUES
 ('Young', 'Mayer', 'youngmayer', '$2a$10$Smbm8FBRFuef5W9tE49O4u/0DboarKRsVYTE.W5V2F0jv7tBaVXoK', 'ROLE_USER','mayer@ymail.com', '2020-08-01'),
 ('Edmund', 'Kozey', 'edkozey', '$2a$10$Rg0scqDBmofJoByw4hSlNu85YPc6i8SjHh4CVP87k5UKkYf6DAw7q', 'ROLE_USER', 'ed@gmail.com', '2014-09-03');
 
-INSERT INTO libraryWebDB.borrow_info(id_user,id_book, borrowed_on, returned_on) VALUES
-(1,2,'2017-10-01','2017-10-14'),
-(1,9,'2017-11-02','2017-11-30'),
-(3,3,'2018-05-01','2018-05-30'),
-(4,4,'2019-01-05','2019-01-28'),
-(4,8,'2020-03-15','2020-04-01'),
-(1,2,'2018-11-19','2018-11-25'),
-(1,2,'2020-04-20','2020-05-05'),
-(3,7,'2020-08-01','2020-08-15');
+INSERT INTO libraryWebDB.borrow_info(id_book, borrowed_on, returned_on) VALUES
+(2,'2017-10-01','2017-10-14'),
+(9,'2017-11-02','2017-11-30'),
+(3,'2018-05-01','2018-05-30'),
+(4,'2019-01-05','2019-01-28'),
+(8,'2020-03-15','2020-04-01'),
+(2,'2018-11-19','2018-11-25'),
+(2,'2020-04-20','2020-05-05'),
+(7,'2020-08-01','2020-08-15');
 
-INSERT INTO libraryWebDB.borrow_info(id_user,id_book, borrowed_on) VALUES
-(1,6,'2020-10-01'),
-(3,4,'2020-10-10');
+INSERT INTO libraryWebDB.borrow_info(id_book, borrowed_on) VALUES
+(6,'2020-10-01'),
+(4,'2020-10-10');
+
+INSERT INTO libraryWebDB.borrow_user(id_user, id_borrow_info) VALUES
+(1,1),
+(1,2),
+(3,3),
+(4,4),
+(4,5),
+(1,6),
+(1,7),
+(3,8),
+(1,9),
+(3,10);
 
 UPDATE libraryWebDB.books
 SET stock = (stock-1)

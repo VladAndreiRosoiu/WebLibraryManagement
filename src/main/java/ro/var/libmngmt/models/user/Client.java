@@ -1,27 +1,35 @@
 package ro.var.libmngmt.models.user;
 
 
-import ro.var.libmngmt.models.book.BorrowedBook;
+import java.util.*;
+import ro.var.libmngmt.models.BorrowHistory;
+import ro.var.libmngmt.models.book.Author;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity()
 @DiscriminatorValue("ROLE_USER")
 public class Client extends User {
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "id")
-//    private List<BorrowedBook> borrowedBooks;
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "id_book")
-//    private BorrowedBook currentBorrowedBook;
+    @OneToMany(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
+    @JoinTable(name = "borrow_user",
+            joinColumns = {@JoinColumn(name = "id_user")},
+            inverseJoinColumns = {@JoinColumn(name = "id_borrow_info")})
+    private List<BorrowHistory> borrowHistory;
 
     public Client() {
     }
 
-    public Client(int id, String firstName, String lastName, String username, String password, String email) {
+    public Client(int id, String firstName, String lastName, String username, String password, String email, List<BorrowHistory> borrowHistory) {
         super(id, firstName, lastName, username, password, email);
+        this.borrowHistory=borrowHistory;
     }
 
+    public List<BorrowHistory> getBorrowHistory() {
+        return borrowHistory;
+    }
+
+    public void setBorrowHistory(List<BorrowHistory> borrowHistory) {
+        this.borrowHistory = borrowHistory;
+    }
 }
