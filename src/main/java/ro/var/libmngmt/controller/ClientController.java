@@ -1,19 +1,17 @@
 package ro.var.libmngmt.controller;
 
+import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import ro.var.libmngmt.exceptions.BookNotFoundEx;
 import ro.var.libmngmt.models.BorrowHistory;
-import ro.var.libmngmt.models.book.*;
+import ro.var.libmngmt.models.book.Book;
 import ro.var.libmngmt.models.user.Client;
 import ro.var.libmngmt.repository.*;
-import ro.var.libmngmt.service.BookService;
 
 import java.util.Optional;
 
@@ -24,14 +22,7 @@ public class ClientController {
     @Autowired
     BookRepository bookRepository;
     @Autowired
-    AuthorRepository authorRepository;
-    @Autowired
-    GenreRepository genreRepository;
-    @Autowired
     ClientRepository clientRepository;
-    @Autowired
-    BorrowHistoryRepository borrowHistoryRepository;
-
 
     @GetMapping("/homepage")
     public String getHomepage() {
@@ -48,8 +39,8 @@ public class ClientController {
     public String getBookDetails(@PathVariable("id") Integer id, Model authorModel, Model genreModel) {
         Optional<Book> bookOpt = bookRepository.findById(id);
         if (bookOpt.isPresent()) {
-            authorModel.addAttribute("authors", authorRepository.findAllById(authorRepository.getAuthorId(id)));
-            genreModel.addAttribute("genres", genreRepository.findAllById(genreRepository.getGenreId(id)));
+            authorModel.addAttribute("authors", bookOpt.get().getAuthors());
+            genreModel.addAttribute("genres", bookOpt.get().getGenres());
             return "viewBookDetails";
         } else {
             throw new BookNotFoundEx("Book not found!");
@@ -58,9 +49,24 @@ public class ClientController {
 
     @GetMapping("/homepage/viewclientdetails")
     public String getClientDetails(Model clientModel) {
-        SecurityContext sc = SecurityContextHolder.getContext();
-        clientModel.addAttribute("client", clientRepository.getClient(sc.getAuthentication().getName()));
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        clientModel.addAttribute("client", clientRepository.getClient(securityContext.getAuthentication().getName()));
         return "viewClientDetails";
+    }
+
+    @GetMapping("/homepage/borrowHistory/{id}")
+    public String getBorrowHistory(@PathVariable("id") Integer id ,Model borrowHistory) {
+        Optional<Client> clientOptional = clientRepository.findById(id);
+        if (clientOptional.isPresent()){
+            borrowHistory.addAttribute("borrowHistory", clientOptional.get().getBorrowHistory());
+            return "viewBorrowHistory";
+        }
+        for (BorrowHistory borrowHistoryObject : clientOptional.get().getBorrowHistory()) {
+            System.out.println(borrowHistoryObject.getBook().getTitle());
+            System.out.println(borrowHistoryObject.getBorrowedOn());
+            System.out.println(borrowHistoryObject.getReturnedOn());
+        }
+        return null;
     }
 
     @GetMapping("/homepage/search")

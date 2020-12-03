@@ -66,14 +66,6 @@ FOREIGN KEY (id_user) REFERENCES users(id),
 FOREIGN KEY (id_borrow_info) references borrow_info (id)
 );
 
--- CREATE TABLE borrow_info(
--- id INT PRIMARY KEY AUTO_INCREMENT,
--- id_book_user INT NOT NULL,
--- borrowed_on DATE NOT NULL,
--- returned_on DATE,
--- FOREIGN KEY (id_book_user) REFERENCES book_user (id)
--- );
-
 INSERT INTO libraryWebDB.authors(first_name, last_name, additional_info, birth_date )
 VALUES
 ('Naomi', 'Novik' , 'Naomi Novik is an American author of speculative fiction. Novik won both the Nebula Award for Best Novel and the Mythopoeic Fantasy Award in 2016 for her novel Uprooted.', '1973-04-30'),
