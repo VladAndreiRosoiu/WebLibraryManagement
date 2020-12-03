@@ -1,7 +1,10 @@
 package ro.var.libmngmt.models.user;
 
+
 import javax.persistence.*;
 import java.io.Serializable;
+
+import java.time.LocalDate;
 import java.util.Objects;
 
 @Entity()
@@ -24,17 +27,20 @@ public abstract class User implements Serializable {
     private String password;
     @Column(name = "email")
     private String email;
+    @Column(name ="registered_on")
+    private LocalDate registeredOn;
 
     public User() {
     }
 
-    public User(int id, String firstName, String lastName, String username, String password, String email) {
+    public User(int id, String firstName, String lastName, String username, String password, String email, LocalDate registeredOn) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.username = username;
         this.password = password;
         this.email = email;
+        this.registeredOn=registeredOn;
     }
 
     public int getId() {
@@ -83,6 +89,14 @@ public abstract class User implements Serializable {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public LocalDate getRegisteredOn() {
+        return registeredOn;
+    }
+
+    public void setRegisteredOn(LocalDate registeredOn) {
+        this.registeredOn = registeredOn;
     }
 
     @Override

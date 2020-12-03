@@ -1,9 +1,9 @@
 package ro.var.libmngmt.models.user;
 
 
+import java.time.LocalDate;
 import java.util.*;
 import ro.var.libmngmt.models.BorrowHistory;
-import ro.var.libmngmt.models.book.Author;
 
 import javax.persistence.*;
 
@@ -20,9 +20,9 @@ public class Client extends User {
     public Client() {
     }
 
-    public Client(int id, String firstName, String lastName, String username, String password, String email, List<BorrowHistory> borrowHistory) {
-        super(id, firstName, lastName, username, password, email);
-        this.borrowHistory=borrowHistory;
+    public Client(int id, String firstName, String lastName, String username, String password, String email, LocalDate registeredOn, List<BorrowHistory> borrowHistory) {
+        super(id, firstName, lastName, username, password, email, registeredOn);
+        this.borrowHistory = borrowHistory;
     }
 
     public List<BorrowHistory> getBorrowHistory() {

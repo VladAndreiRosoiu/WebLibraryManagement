@@ -13,15 +13,13 @@ import ro.var.libmngmt.models.BorrowHistory;
 import ro.var.libmngmt.models.book.*;
 import ro.var.libmngmt.models.user.Client;
 import ro.var.libmngmt.repository.*;
+import ro.var.libmngmt.service.BookService;
 
 import java.util.Optional;
 
 @Controller
-//@RequestMapping("/homepage") -- check if works only with rest controllers
 public class ClientController {
 
-//    add service package
-//    private final BookService bookService;
 
     @Autowired
     BookRepository bookRepository;
@@ -34,6 +32,7 @@ public class ClientController {
     @Autowired
     BorrowHistoryRepository borrowHistoryRepository;
 
+
     @GetMapping("/homepage")
     public String getHomepage() {
         return "homepage";
@@ -42,24 +41,6 @@ public class ClientController {
     @GetMapping("/homepage/showbooks")
     public String getBooks(Model bookModel) {
         bookModel.addAttribute("books", bookRepository.findAll());
-        for (Client client : clientRepository.findAll()){
-            System.out.println(client.getId()+ ", " + client.getFirstName() + " " + client.getLastName() + " " + client.getEmail());
-        }
-        for (Book book : bookRepository.findAll()) {
-            System.out.println("Book -> " + book.getTitle());
-            System.out.println("Authors : ");
-            for (Author author : book.getAuthors()) {
-                System.out.println("Author -> " + author.getFirstName() + " " + author.getLastName() + "!");
-            }
-            System.out.println("Genres : ");
-            for (Genre genre : book.getGenres()) {
-                System.out.println("Genre -> " + genre.getGenreType() + "!");
-            }
-        }
-        for (BorrowHistory borrowHistory : borrowHistoryRepository.findAll()) {
-            System.out.println(borrowHistory.getBook().getTitle() + ", borrowed by "  + borrowHistory.getClient().getFirstName() + " " + borrowHistory.getClient().getLastName() + "borrowed on " + borrowHistory.getBorrowedOn() + "returned on " + borrowHistory.getReturnedOn());
-        }
-
         return "displayBooksForClient";
     }
 
@@ -79,11 +60,6 @@ public class ClientController {
     public String getClientDetails(Model clientModel) {
         SecurityContext sc = SecurityContextHolder.getContext();
         clientModel.addAttribute("client", clientRepository.getClient(sc.getAuthentication().getName()));
-
-        for (BorrowHistory borrowHistory : clientRepository.getClient(sc.getAuthentication().getName()).getBorrowHistory()){
-            System.out.println(borrowHistory.getBook().getTitle() + borrowHistory.getBorrowedOn() + borrowHistory .getReturnedOn());
-        }
-
         return "viewClientDetails";
     }
 

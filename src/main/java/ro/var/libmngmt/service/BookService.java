@@ -8,9 +8,6 @@ import ro.var.libmngmt.repository.BookRepository;
 public class BookService {
 
     @Autowired
-    private final BookRepository bookRepository;
+    private BookRepository bookRepository;
 
-    public BookService(BookRepository bookRepository) {
-        this.bookRepository = bookRepository;
-    }
 }
