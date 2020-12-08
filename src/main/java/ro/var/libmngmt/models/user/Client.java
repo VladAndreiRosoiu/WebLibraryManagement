@@ -11,7 +11,7 @@ import javax.persistence.*;
 @DiscriminatorValue("ROLE_USER")
 public class Client extends User {
 
-    @OneToMany(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
+    @OneToMany(cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
     @JoinTable(name = "borrow_user",
             joinColumns = {@JoinColumn(name = "id_user")},
             inverseJoinColumns = {@JoinColumn(name = "id_borrow_info")})

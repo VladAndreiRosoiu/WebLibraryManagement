@@ -16,7 +16,7 @@ public class BorrowHistory {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_book")
     private Book book;
-    @OneToOne(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
+    @OneToOne(cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
     @JoinTable(name = "borrow_user",
             joinColumns = {@JoinColumn(name = "id_borrow_info")},
             inverseJoinColumns = {@JoinColumn(name = "id_user")})
