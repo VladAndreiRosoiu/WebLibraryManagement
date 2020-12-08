@@ -30,7 +30,6 @@ CREATE TABLE books(
 id INT PRIMARY KEY AUTO_INCREMENT,
 book_title VARCHAR(255) NOT NULL,
 isbn BIGINT UNIQUE,
-stock INT NOT NULL,
 release_date DATE NOT NULL,
 can_be_displayed BOOLEAN DEFAULT TRUE);
 
@@ -49,6 +48,12 @@ id_genre INT NOT NULL,
 CONSTRAINT book_genre_constr UNIQUE (id_book, id_genre),
 FOREIGN KEY (id_book) REFERENCES books(id),
 FOREIGN KEY (id_genre) REFERENCES genre(id));
+
+CREATE TABLE book_stock(
+id_book INT PRIMARY KEY,
+stock INT,
+FOREIGN KEY (id_book) REFERENCES books(id)
+);
 
 CREATE TABLE borrow_info(
 id INT PRIMARY KEY AUTO_INCREMENT,
@@ -82,17 +87,29 @@ VALUES
 ('Andrew', 'Delbanco', 'Andrew H. Delbanco is the Alexander Hamilton Professor of American Studies at Columbia University. He is the author of several books, including College: What It Was, Is, and Should Be, which has been translated into Chinese, Korean, Turkish, Russian, and Hebrew. ', '1952-02-20'),
 ('Rockwell', 'Kent', 'Rockwell Kent was an American painter, printmaker, illustrator, writer, sailor, adventurer and voyager.', '1882-06-21');
 
-INSERT INTO libraryWebDB.books(book_title, isbn, stock, release_date)
+INSERT INTO libraryWebDB.books(book_title, isbn, release_date)
 VALUES
-('A Deadly Education', 9780593128480, 10, '2020-09-29'),
-('The Silvered Serpents', 9781250144577, 5, '2020-09-22'),
-('All the Light We Cannot See', 9781476746586, 30, '2014-05-01'),
-('The Book Thief', 9780375831003, 13, '2006-03-14'),
-('Pride and Prejudice', 9780679783268, 50, '2000-10-10'),
-('Where the Crawdads Sing', 9780735219113, 3, '2018-08-14'),
-('The Silent Patient', 9781250301697, 8, '2019-02-05'),
-('Nineteen Eighty-Four', 9780452284234, 100, '2003-05-06'),
-('Moby-Dick or, the Whale', 9780142437247, 66, '2003-02-21');
+('A Deadly Education', 9780593128480, '2020-09-29'),
+('The Silvered Serpents', 9781250144577, '2020-09-22'),
+('All the Light We Cannot See', 9781476746586, '2014-05-01'),
+('The Book Thief', 9780375831003, '2006-03-14'),
+('Pride and Prejudice', 9780679783268, '2000-10-10'),
+('Where the Crawdads Sing', 9780735219113, '2018-08-14'),
+('The Silent Patient', 9781250301697, '2019-02-05'),
+('Nineteen Eighty-Four', 9780452284234, '2003-05-06'),
+('Moby-Dick or, the Whale', 9780142437247, '2003-02-21');
+
+INSERT INTO libraryWebDB.book_stock (id_book, stock)
+VALUES
+(1,10),
+(2,5),
+(3,30),
+(4,13),
+(5,50),
+(6,3),
+(7,8),
+(8,100),
+(9,66);
 
 INSERT INTO libraryWebDB.book_author (id_book, id_author)
 VALUES
@@ -206,10 +223,10 @@ INSERT INTO libraryWebDB.borrow_user(id_user, id_borrow_info) VALUES
 (1,9),
 (3,10);
 
-UPDATE libraryWebDB.books
+UPDATE libraryWebDB.book_stock
 SET stock = (stock-1)
-WHERE id=6;
+WHERE id_book=6;
 
-UPDATE libraryWebDB.books
+UPDATE libraryWebDB.book_stock
 SET stock = (stock-1)
-WHERE id=4;
+WHERE id_book=4;

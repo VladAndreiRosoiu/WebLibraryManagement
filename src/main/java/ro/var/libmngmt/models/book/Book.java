@@ -18,8 +18,6 @@ public class Book implements Serializable {
     private String title;
     @Column(name = "isbn", unique = true)
     private long isbn;
-    @Column(name = "stock")
-    private int stock;
     @OneToMany(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
     @JoinTable(name = "book_author",
             joinColumns = {@JoinColumn(name = "id_book")},
@@ -36,11 +34,10 @@ public class Book implements Serializable {
     public Book() {
     }
 
-    public Book(int id, String title, long isbn, int stock, List<Author> authors, List<Genre> genres, LocalDate releaseDate) {
+    public Book(int id, String title, long isbn, List<Author> authors, List<Genre> genres, LocalDate releaseDate) {
         this.id = id;
         this.title = title;
         this.isbn = isbn;
-        this.stock = stock;
         this.authors = authors;
         this.genres = genres;
         this.releaseDate = releaseDate;
@@ -68,14 +65,6 @@ public class Book implements Serializable {
 
     public void setIsbn(long isbn) {
         this.isbn = isbn;
-    }
-
-    public int getStock() {
-        return stock;
-    }
-
-    public void setStock(int stock) {
-        this.stock = stock;
     }
 
     public List<Author> getAuthors() {
@@ -109,7 +98,6 @@ public class Book implements Serializable {
         Book book = (Book) o;
         return id == book.id &&
                 isbn == book.isbn &&
-                stock == book.stock &&
                 Objects.equals(title, book.title) &&
                 Objects.equals(authors, book.authors) &&
                 Objects.equals(genres, book.genres) &&
@@ -118,6 +106,6 @@ public class Book implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, isbn, stock, authors, genres, releaseDate);
+        return Objects.hash(id, title, isbn, authors, genres, releaseDate);
     }
 }
