@@ -1,28 +1,18 @@
 package ro.var.libmngmt.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import ro.var.libmngmt.exceptions.BookNotFoundEx;
-import ro.var.libmngmt.exceptions.UserNotFoundEx;
-import ro.var.libmngmt.models.book.Book;
-import ro.var.libmngmt.repository.BookRepository;
-
-import java.util.Optional;
+import ro.var.libmngmt.service.LibraryService;
 
 
 @Controller
 public class ClientController {
 
     @Autowired
-    BookRepository bookRepository;
+    LibraryService libraryService;
 
     @GetMapping("/homepage")
     public String getHomepage() {
@@ -31,21 +21,21 @@ public class ClientController {
 
     @GetMapping("/homepage/showbooks")
     public String getBooks(Model bookModel) {
-        bookModel.addAttribute("books", bookRepository.findAll());
+        bookModel.addAttribute("books", libraryService.getBooks());
         return "displayBooksForClient";
     }
 
-    @GetMapping("/homepage/viewbookdetails/{id}")
-    public String getBookDetails(@PathVariable("id") Integer id, Model authorModel, Model genreModel) {
-        Optional<Book> bookOptional = bookRepository.findById(id);
-        if (bookOptional.isPresent()) {
-            authorModel.addAttribute("authors",bookOptional.get().getAuthors());
-            genreModel.addAttribute("genres", bookOptional.get().getGenres());
-            return "viewBookDetails";
-        } else {
-            throw new BookNotFoundEx("Book not found!");
-        }
-    }
+//    @GetMapping("/homepage/viewbookdetails/{id}")
+//    public String getBookDetails(@PathVariable("id") Integer id, Model authorModel, Model genreModel) {
+//        Optional<Book> bookOptional = bookRepository.findById(id);
+//        if (bookOptional.isPresent()) {
+//            authorModel.addAttribute("authors",bookOptional.get().getAuthors());
+//            genreModel.addAttribute("genres", bookOptional.get().getGenres());
+//            return "viewBookDetails";
+//        } else {
+//            throw new BookNotFoundEx("Book not found!");
+//        }
+//    }
 
 //    @GetMapping("/homepage/viewclientdetails")
 //    public String getClientDetails(Model clientModel) {
