@@ -100,12 +100,28 @@ public class ClientController {
 
     @GetMapping("/homepage/searchByISBN")
     public String searchByISBN() {
-        return null;
+        return "searchByISBN";
+    }
+
+    @RequestMapping("/homepage/searchByISBN")
+    public String getSearchByISBN(Model bookModel, @Param("keyword") Long isbn){
+        if(libraryService.findBookByIsbn(isbn)!=null) {
+            bookModel.addAttribute("books", libraryService.findBookByIsbn(isbn));
+            return "displayBooksForClient";
+        }else {
+            throw new BookNotFoundEx("Book not found!");
+        }
     }
 
     @GetMapping("/homepage/searchByGenre")
     public String searchByGenre() {
-        return null;
+        return "searchByGenre";
+    }
+
+    @RequestMapping("/homepage/searchByGenre")
+    public String getSearchByGenre(Model bookModel, @Param("keyword") String keyword){
+        bookModel.addAttribute("books", libraryService.findBooksByGenre(keyword));
+        return "displayBooksForClient";
     }
 
 }
