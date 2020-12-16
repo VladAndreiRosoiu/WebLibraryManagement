@@ -133,15 +133,18 @@ public class ClientController {
             return "redirect:/homepage";
         }else{
             System.out.println("No book to return!");
-            throw new BookNotFoundEx("You haven't borrowed any book yet!");
+            return "redirect:/homepage";
         }
     }
 
     @GetMapping("/homepage/borrowBook/{id}")
     public String borrowBook(@PathVariable("id") Integer id){
         SecurityContext securityContext = SecurityContextHolder.getContext();
-        libraryService.borrowBook(securityContext.getAuthentication().getName(), id);
-        return "redirect:/homepage";
+        if (libraryService.borrowBook(securityContext.getAuthentication().getName(), id)){
+            return "redirect:/homepage";
+        }else {
+            return "redirect:/homepage/viewclientdetails";
+        }
     }
 
 }

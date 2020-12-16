@@ -3,8 +3,6 @@ package ro.var.libmngmt.service;
 import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import ro.var.libmngmt.models.BorrowHistory;
 import ro.var.libmngmt.models.book.Author;
 import ro.var.libmngmt.models.book.Book;
@@ -87,19 +85,20 @@ public class LibraryService {
         return bookRepository.findAll().stream().filter(book -> book.getIsbn() == isbn).findFirst().orElse(null);
     }
 
-    public boolean hasBookCurrentlyBorrowed(String username){
+    public boolean hasBookCurrentlyBorrowed(String username) {
         Client client = clientRepository.findClientByUsername(username);
-        for(BorrowHistory borrowHistory:client.getBorrowHistory()){
-            if (borrowHistory.getReturnedOn()==null){
+        for (BorrowHistory borrowHistory : client.getBorrowHistory()) {
+            if (borrowHistory.getReturnedOn() == null) {
                 return true;
             }
         }
         return false;
     }
-    public void returnBook(String username){
+
+    public void returnBook(String username) {
         Client client = clientRepository.findClientByUsername(username);
-        for (BorrowHistory borrowHistory:client.getBorrowHistory()){
-            if (borrowHistory.getReturnedOn()==null){
+        for (BorrowHistory borrowHistory : client.getBorrowHistory()) {
+            if (borrowHistory.getReturnedOn() == null) {
                 borrowHistory.setReturnedOn(LocalDate.now());
                 int currentStock = borrowHistory.getBook().getStock();
                 borrowHistory.getBook().setStock(++currentStock);
@@ -108,25 +107,20 @@ public class LibraryService {
         }
     }
 
-    public void borrowBook(String username, int bookId) {
-        Optional<BorrowHistory> hasBookCurrentlyBorrowed = clientRepository.findClientByUsername(username)
+    public boolean borrowBook(String username, int bookId) {
+        Optional<Book> bookOptional = bookRepository.findById(bookId);
+        Optional<BorrowHistory> borrowHistoryOptional = clientRepository.findClientByUsername(username)
                 .getBorrowHistory()
                 .stream()
                 .filter(borrowHistory1 -> borrowHistory1.getReturnedOn() == null)
                 .findFirst();
         Client client = clientRepository.findClientByUsername(username);
-        Book book = bookRepository.findById(bookId).get();
-
-
-
-        if (!hasBookCurrentlyBorrowed.isPresent()) {
-            System.out.println("STARTED BORROW PROCESS");
-            System.out.println("BOOK TO BORROW " + bookId + " WITH ID");
-            System.out.println("CHECK ENDED! NO CURRENTLY BORROWED BOOKS WHERE FOUND" );
-            BorrowHistory borrowHistory = new BorrowHistory(book,client,LocalDate.now());
-            borrowHistoryRepository.save(borrowHistory);
-        }else {
+        if (!borrowHistoryOptional.isPresent() && bookOptional.isPresent()) {
+            borrowHistoryRepository.save(new BorrowHistory(bookOptional.get(), client, LocalDate.now()));
+            return true;
+        } else {
             System.out.println("ALREADY HAVE BORROWED BOOK");
+            return false;
         }
     }
 
