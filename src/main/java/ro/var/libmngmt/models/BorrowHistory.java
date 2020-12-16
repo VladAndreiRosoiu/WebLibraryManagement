@@ -11,14 +11,14 @@ import java.time.LocalDate;
 public class BorrowHistory {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true)
     private int id;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_book")
+    @JoinColumn(name = "id_book", unique = false)
     private Book book;
     @ManyToOne(cascade = {CascadeType.PERSIST})
-    @JoinColumn(name = "id_user")
+    @JoinColumn(name = "id_user", unique = false)
     private Client client;
     @Column(name = "borrowed_on")
     private LocalDate borrowedOn;

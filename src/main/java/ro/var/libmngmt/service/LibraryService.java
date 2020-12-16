@@ -3,6 +3,7 @@ package ro.var.libmngmt.service;
 import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import ro.var.libmngmt.models.BorrowHistory;
 import ro.var.libmngmt.models.book.Author;
@@ -116,13 +117,16 @@ public class LibraryService {
         Client client = clientRepository.findClientByUsername(username);
         Book book = bookRepository.findById(bookId).get();
 
-        System.out.println("CHECK ENDED! NO CURRENTLY BORROWED BOOKS WHERE FOUND" );
+
 
         if (!hasBookCurrentlyBorrowed.isPresent()) {
             System.out.println("STARTED BORROW PROCESS");
             System.out.println("BOOK TO BORROW " + bookId + " WITH ID");
-            BorrowHistory borrowHistory = new BorrowHistory(book, client, LocalDate.now());
+            System.out.println("CHECK ENDED! NO CURRENTLY BORROWED BOOKS WHERE FOUND" );
+            BorrowHistory borrowHistory = new BorrowHistory(book,client,LocalDate.now());
             borrowHistoryRepository.save(borrowHistory);
+        }else {
+            System.out.println("ALREADY HAVE BORROWED BOOK");
         }
     }
 
