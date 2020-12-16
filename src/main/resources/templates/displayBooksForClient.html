@@ -20,7 +20,7 @@
             <th>Book ISBN</th>
             <th>Book Release date</th>
             <th>Book Stock</th>
-            <th>Book Author</th>
+            <th>Book Details</th>
             <th>Actions</th>
         </tr>
         </thead>
@@ -32,6 +32,9 @@
             <td th:text="${book.stock}">Book Stock</td>
             <td>
                 <a th:href="@{/homepage/viewbookdetails/{id}(id=${book.id})}" class="mr-2">View Book Details</a>
+            </td>
+            <td>
+                <a th:href="@{/homepage/borrowBook/{id}(id=${book.id})}" class="mr-2">Borrow Book</a>
             </td>
         </tr>
         </tbody>

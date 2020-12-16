@@ -1,20 +1,18 @@
 package ro.var.libmngmt.models.user;
 
 
-import java.time.LocalDate;
-import java.util.*;
 import ro.var.libmngmt.models.BorrowHistory;
 
 import javax.persistence.*;
+import java.time.LocalDate;
+import java.util.List;
 
 @Entity()
 @DiscriminatorValue("ROLE_USER")
 public class Client extends User {
 
     @OneToMany(cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
-    @JoinTable(name = "borrow_user",
-            joinColumns = {@JoinColumn(name = "id_user")},
-            inverseJoinColumns = {@JoinColumn(name = "id_borrow_info")})
+    @JoinColumn(name = "id_user")
     private List<BorrowHistory> borrowHistory;
 
     public Client() {

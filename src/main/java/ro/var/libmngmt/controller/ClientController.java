@@ -37,8 +37,8 @@ public class ClientController {
     @GetMapping("/homepage/viewbookdetails/{id}")
     public String getBookDetails(@PathVariable("id") Integer id, Model authorModel, Model genreModel) {
         Book searchedBook = libraryService.findBookById(id);
-        if (searchedBook!=null) {
-            authorModel.addAttribute("authors",searchedBook.getAuthors());
+        if (searchedBook != null) {
+            authorModel.addAttribute("authors", searchedBook.getAuthors());
             genreModel.addAttribute("genres", searchedBook.getGenres());
             return "viewBookDetails";
         } else {
@@ -50,10 +50,10 @@ public class ClientController {
     public String getClientDetails(Model clientModel) {
         SecurityContext securityContext = SecurityContextHolder.getContext();
         Client client = libraryService.findClientByUsername(securityContext.getAuthentication().getName());
-        if (client!=null){
+        if (client != null) {
             clientModel.addAttribute("client", libraryService.findClientByUsername(securityContext.getAuthentication().getName()));
             return "viewClientDetails";
-        }else {
+        } else {
             throw new UserNotFoundEx("User not found!");
         }
 
@@ -62,7 +62,7 @@ public class ClientController {
     @GetMapping("/homepage/borrowHistory/{id}")
     public String getBorrowHistory(@PathVariable("id") Integer id, Model borrowHistory) {
         Client client = libraryService.findClientById(id);
-        if (client!=null) {
+        if (client != null) {
             borrowHistory.addAttribute("borrowHistory", client.getBorrowHistory());
             return "viewBorrowHistory";
         } else {
@@ -82,7 +82,7 @@ public class ClientController {
     }
 
     @RequestMapping("/homepage/searchByAuthor")
-    public String getSearchByAuthor(Model bookModel, @Param("keyword") String keyword){
+    public String getSearchByAuthor(Model bookModel, @Param("keyword") String keyword) {
         bookModel.addAttribute("books", libraryService.findBooksByAuthor(keyword));
         return "displayBooksForClient";
     }
@@ -93,7 +93,7 @@ public class ClientController {
     }
 
     @RequestMapping("/homepage/searchByTitle")
-    public String getSearchByTitle(Model bookModel, @Param("keyword") String keyword){
+    public String getSearchByTitle(Model bookModel, @Param("keyword") String keyword) {
         bookModel.addAttribute("books", libraryService.findBooksByTitle(keyword));
         return "displayBooksForClient";
     }
@@ -104,11 +104,11 @@ public class ClientController {
     }
 
     @RequestMapping("/homepage/searchByISBN")
-    public String getSearchByISBN(Model bookModel, @Param("keyword") Long isbn){
-        if(libraryService.findBookByIsbn(isbn)!=null) {
+    public String getSearchByISBN(Model bookModel, @Param("keyword") Long isbn) {
+        if (libraryService.findBookByIsbn(isbn) != null) {
             bookModel.addAttribute("books", libraryService.findBookByIsbn(isbn));
             return "displayBooksForClient";
-        }else {
+        } else {
             throw new BookNotFoundEx("Book not found!");
         }
     }
@@ -119,9 +119,29 @@ public class ClientController {
     }
 
     @RequestMapping("/homepage/searchByGenre")
-    public String getSearchByGenre(Model bookModel, @Param("keyword") String keyword){
+    public String getSearchByGenre(Model bookModel, @Param("keyword") String keyword) {
         bookModel.addAttribute("books", libraryService.findBooksByGenre(keyword));
         return "displayBooksForClient";
+    }
+
+    @GetMapping("/homepage/returnBook")
+    public String returnBook(){
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        if (libraryService.hasBookCurrentlyBorrowed(securityContext.getAuthentication().getName())){
+            libraryService.returnBook(securityContext.getAuthentication().getName());
+            System.out.println("Book returned");
+            return "redirect:/homepage";
+        }else{
+            System.out.println("No book to return!");
+            throw new BookNotFoundEx("You haven't borrowed any book yet!");
+        }
+    }
+
+    @GetMapping("/homepage/borrowBook/{id}")
+    public String borrowBook(@PathVariable("id") Integer id){
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        libraryService.borrowBook(securityContext.getAuthentication().getName(), id);
+        return "redirect:/homepage";
     }
 
 }

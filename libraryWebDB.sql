@@ -30,6 +30,7 @@ CREATE TABLE books(
 id INT PRIMARY KEY AUTO_INCREMENT,
 book_title VARCHAR(255) NOT NULL,
 isbn BIGINT UNIQUE,
+stock INT NOT NULL,
 release_date DATE NOT NULL,
 can_be_displayed BOOLEAN DEFAULT TRUE);
 
@@ -49,26 +50,14 @@ CONSTRAINT book_genre_constr UNIQUE (id_book, id_genre),
 FOREIGN KEY (id_book) REFERENCES books(id),
 FOREIGN KEY (id_genre) REFERENCES genre(id));
 
-CREATE TABLE book_stock(
-id_book INT PRIMARY KEY,
-stock INT,
-FOREIGN KEY (id_book) REFERENCES books(id)
-);
-
 CREATE TABLE borrow_info(
 id INT PRIMARY KEY AUTO_INCREMENT,
 id_book INT NOT NULL,
+id_user INT NOT NULL,
 borrowed_on DATE NOT NULL,
 returned_on DATE,
-FOREIGN KEY (id_book) REFERENCES books(id)
-);
-
-CREATE TABLE borrow_user(
-id INT PRIMARY KEY AUTO_INCREMENT,
-id_user INT NOT NULL,
-id_borrow_info INT NOT NULL,
-FOREIGN KEY (id_user) REFERENCES users(id),
-FOREIGN KEY (id_borrow_info) references borrow_info (id)
+FOREIGN KEY (id_book) REFERENCES books(id),
+FOREIGN KEY (id_user) REFERENCES users(id)
 );
 
 INSERT INTO libraryWebDB.authors(first_name, last_name, additional_info, birth_date )
@@ -87,29 +76,17 @@ VALUES
 ('Andrew', 'Delbanco', 'Andrew H. Delbanco is the Alexander Hamilton Professor of American Studies at Columbia University. He is the author of several books, including College: What It Was, Is, and Should Be, which has been translated into Chinese, Korean, Turkish, Russian, and Hebrew. ', '1952-02-20'),
 ('Rockwell', 'Kent', 'Rockwell Kent was an American painter, printmaker, illustrator, writer, sailor, adventurer and voyager.', '1882-06-21');
 
-INSERT INTO libraryWebDB.books(book_title, isbn, release_date)
+INSERT INTO libraryWebDB.books(book_title, isbn, stock, release_date)
 VALUES
-('A Deadly Education', 9780593128480, '2020-09-29'),
-('The Silvered Serpents', 9781250144577, '2020-09-22'),
-('All the Light We Cannot See', 9781476746586, '2014-05-01'),
-('The Book Thief', 9780375831003, '2006-03-14'),
-('Pride and Prejudice', 9780679783268, '2000-10-10'),
-('Where the Crawdads Sing', 9780735219113, '2018-08-14'),
-('The Silent Patient', 9781250301697, '2019-02-05'),
-('Nineteen Eighty-Four', 9780452284234, '2003-05-06'),
-('Moby-Dick or, the Whale', 9780142437247, '2003-02-21');
-
-INSERT INTO libraryWebDB.book_stock (id_book, stock)
-VALUES
-(1,10),
-(2,5),
-(3,30),
-(4,13),
-(5,50),
-(6,3),
-(7,8),
-(8,100),
-(9,66);
+('A Deadly Education', 9780593128480, 10, '2020-09-29'),
+('The Silvered Serpents', 9781250144577, 5, '2020-09-22'),
+('All the Light We Cannot See', 9781476746586, 30, '2014-05-01'),
+('The Book Thief', 9780375831003, 13, '2006-03-14'),
+('Pride and Prejudice', 9780679783268, 50, '2000-10-10'),
+('Where the Crawdads Sing', 9780735219113, 3, '2018-08-14'),
+('The Silent Patient', 9781250301697, 8, '2019-02-05'),
+('Nineteen Eighty-Four', 9780452284234, 100, '2003-05-06'),
+('Moby-Dick or, the Whale', 9780142437247, 66, '2003-02-21');
 
 INSERT INTO libraryWebDB.book_author (id_book, id_author)
 VALUES
@@ -197,36 +174,24 @@ VALUES
 ('Young', 'Mayer', 'youngmayer', '$2a$10$Smbm8FBRFuef5W9tE49O4u/0DboarKRsVYTE.W5V2F0jv7tBaVXoK', 'ROLE_USER','mayer@ymail.com', '2020-08-01'),
 ('Edmund', 'Kozey', 'edkozey', '$2a$10$Rg0scqDBmofJoByw4hSlNu85YPc6i8SjHh4CVP87k5UKkYf6DAw7q', 'ROLE_USER', 'ed@gmail.com', '2014-09-03');
 
-INSERT INTO libraryWebDB.borrow_info(id_book, borrowed_on, returned_on) VALUES
-(2,'2017-10-01','2017-10-14'),
-(9,'2017-11-02','2017-11-30'),
-(3,'2018-05-01','2018-05-30'),
-(4,'2019-01-05','2019-01-28'),
-(8,'2020-03-15','2020-04-01'),
-(2,'2018-11-19','2018-11-25'),
-(2,'2020-04-20','2020-05-05'),
-(7,'2020-08-01','2020-08-15');
+INSERT INTO libraryWebDB.borrow_info(id_book,id_user, borrowed_on, returned_on) VALUES
+(2,1,'2017-10-01','2017-10-14'),
+(9,1,'2017-11-02','2017-11-30'),
+(3,3,'2018-05-01','2018-05-30'),
+(4,4,'2019-01-05','2019-01-28'),
+(8,4,'2020-03-15','2020-04-01'),
+(2,1,'2018-11-19','2018-11-25'),
+(2,1,'2020-04-20','2020-05-05'),
+(7,3,'2020-08-01','2020-08-15');
 
-INSERT INTO libraryWebDB.borrow_info(id_book, borrowed_on) VALUES
-(6,'2020-10-01'),
-(4,'2020-10-10');
+INSERT INTO libraryWebDB.borrow_info(id_book,id_user, borrowed_on) VALUES
+(6,1,'2020-10-01'),
+(4,3,'2020-10-10');
 
-INSERT INTO libraryWebDB.borrow_user(id_user, id_borrow_info) VALUES
-(1,1),
-(1,2),
-(3,3),
-(4,4),
-(4,5),
-(1,6),
-(1,7),
-(3,8),
-(1,9),
-(3,10);
-
-UPDATE libraryWebDB.book_stock
+UPDATE libraryWebDB.books
 SET stock = (stock-1)
-WHERE id_book=6;
+WHERE id=6;
 
-UPDATE libraryWebDB.book_stock
+UPDATE libraryWebDB.books
 SET stock = (stock-1)
-WHERE id_book=4;
+WHERE id=4;

@@ -1,9 +1,6 @@
 package ro.var.libmngmt.models.book;
 
 
-
-import org.springframework.beans.factory.annotation.Autowired;
-
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.Objects;
@@ -25,7 +22,7 @@ public class Author {
     @Column(name = "birth_date")
     private LocalDate birthDate;
 
-    public Author(){
+    public Author() {
 
     }
 

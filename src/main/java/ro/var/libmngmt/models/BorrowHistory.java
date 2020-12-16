@@ -1,4 +1,5 @@
 package ro.var.libmngmt.models;
+
 import ro.var.libmngmt.models.book.Book;
 import ro.var.libmngmt.models.user.Client;
 
@@ -16,23 +17,28 @@ public class BorrowHistory {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_book")
     private Book book;
-    @OneToOne(cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
-    @JoinTable(name = "borrow_user",
-            joinColumns = {@JoinColumn(name = "id_borrow_info")},
-            inverseJoinColumns = {@JoinColumn(name = "id_user")})
+    @ManyToOne(cascade = {CascadeType.PERSIST})
+    @JoinColumn(name = "id_user")
     private Client client;
     @Column(name = "borrowed_on")
     private LocalDate borrowedOn;
     @Column(name = "returned_on")
     private LocalDate returnedOn;
 
-
     public BorrowHistory() {
     }
 
-    public BorrowHistory(Book book, Client client) {
+    public BorrowHistory(Book book, Client client, LocalDate borrowedOn) {
         this.book = book;
         this.client = client;
+        this.borrowedOn=borrowedOn;
+
+    }
+    public BorrowHistory(Book book, Client client, LocalDate borrowedOn, LocalDate returnedOn) {
+        this.book = book;
+        this.client = client;
+        this.borrowedOn=borrowedOn;
+        this.returnedOn=returnedOn;
 
     }
 
