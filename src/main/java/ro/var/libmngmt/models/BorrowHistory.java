@@ -14,10 +14,10 @@ public class BorrowHistory {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true)
     private int id;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_book", unique = false)
     private Book book;
-    @ManyToOne(cascade = {CascadeType.PERSIST})
+    @OneToOne(cascade = {CascadeType.PERSIST})
     @JoinColumn(name = "id_user", unique = false)
     private Client client;
     @Column(name = "borrowed_on")

@@ -3,6 +3,7 @@ package ro.var.libmngmt.models.book;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -21,6 +22,13 @@ public class Author {
     private String description;
     @Column(name = "birth_date")
     private LocalDate birthDate;
+    @ManyToMany(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "book_author",
+            joinColumns = {@JoinColumn(name = "id_author")},
+            inverseJoinColumns = {@JoinColumn(name = "id_book")}
+    )
+    private List<Book> books;
 
     public Author() {
 
@@ -74,6 +82,14 @@ public class Author {
         this.birthDate = birthDate;
     }
 
+    public List<Book> getBooks() {
+        return books;
+    }
+
+    public void setBooks(List<Book> books) {
+        this.books = books;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -90,4 +106,6 @@ public class Author {
     public int hashCode() {
         return Objects.hash(id, firstName, lastName, description, birthDate);
     }
+
+
 }

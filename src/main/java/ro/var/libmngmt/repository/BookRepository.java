@@ -2,7 +2,6 @@ package ro.var.libmngmt.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import ro.var.libmngmt.models.book.Author;
 import ro.var.libmngmt.models.book.Book;
 
 import java.util.List;

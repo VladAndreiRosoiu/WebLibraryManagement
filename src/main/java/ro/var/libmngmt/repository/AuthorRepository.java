@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 import ro.var.libmngmt.models.book.Author;
 
 import java.util.List;
+import java.util.Optional;
 
 
 public interface AuthorRepository extends JpaRepository<Author, Integer> {

@@ -1,6 +1,7 @@
 package ro.var.libmngmt.models.book;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "genre")
@@ -11,6 +12,12 @@ public class Genre {
     private int id;
     @Column(name = "genre_type", unique = true)
     private String genreType;
+    @ManyToMany(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "book_genre",
+            joinColumns = {@JoinColumn(name = "id_genre")},
+            inverseJoinColumns = {@JoinColumn(name = "id_book")})
+    private List<Book> books;
 
     public Genre() {
     }
@@ -34,5 +41,13 @@ public class Genre {
 
     public void setGenreType(String genreType) {
         this.genreType = genreType;
+    }
+
+    public List<Book> getBooks() {
+        return books;
+    }
+
+    public void setBooks(List<Book> books) {
+        this.books = books;
     }
 }

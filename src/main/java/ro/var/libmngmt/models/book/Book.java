@@ -19,13 +19,15 @@ public class Book {
     private long isbn;
     @Column(name = "stock")
     private int stock;
-    @OneToMany(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
-    @JoinTable(name = "book_author",
+    @ManyToMany(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "book_author",
             joinColumns = {@JoinColumn(name = "id_book")},
             inverseJoinColumns = {@JoinColumn(name = "id_author")})
     private List<Author> authors;
-    @OneToMany(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
-    @JoinTable(name = "book_genre",
+    @ManyToMany(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "book_genre",
             joinColumns = {@JoinColumn(name = "id_book")},
             inverseJoinColumns = {@JoinColumn(name = "id_genre")})
     private List<Genre> genres;

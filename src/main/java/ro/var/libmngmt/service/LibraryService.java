@@ -8,6 +8,7 @@ import ro.var.libmngmt.models.book.Author;
 import ro.var.libmngmt.models.book.Book;
 import ro.var.libmngmt.models.book.Genre;
 import ro.var.libmngmt.models.user.Client;
+import ro.var.libmngmt.repository.AuthorRepository;
 import ro.var.libmngmt.repository.BookRepository;
 import ro.var.libmngmt.repository.BorrowHistoryRepository;
 import ro.var.libmngmt.repository.ClientRepository;
@@ -28,6 +29,8 @@ public class LibraryService {
     ClientRepository clientRepository;
     @Autowired
     BorrowHistoryRepository borrowHistoryRepository;
+    @Autowired
+    AuthorRepository authorRepository;
     Transaction transaction;
 
     public List<Book> getBooks() {
