@@ -2,7 +2,6 @@ package ro.var.libmngmt.models.user;
 
 
 import ro.var.libmngmt.models.BorrowInfo;
-import ro.var.libmngmt.models.book.Genre;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -12,11 +11,8 @@ import java.util.List;
 @DiscriminatorValue("ROLE_USER")
 public class Client extends User {
 
-    @ManyToMany(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "borrow_user",
-            joinColumns = {@JoinColumn(name = "id_user")},
-            inverseJoinColumns = {@JoinColumn(name = "id_borrow_info")})
+    @OneToMany(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_user")
     private List<BorrowInfo> borrowInfoList;
 
     public Client() {

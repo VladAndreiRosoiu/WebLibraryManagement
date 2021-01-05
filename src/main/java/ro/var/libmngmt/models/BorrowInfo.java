@@ -21,11 +21,8 @@ public class BorrowInfo {
     private LocalDate borrowedOn;
     @Column(name = "returned_on")
     private LocalDate returnedOn;
-    @OneToOne(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "borrow_user",
-            joinColumns = {@JoinColumn(name = "id_user")},
-            inverseJoinColumns = {@JoinColumn(name = "id")})
+    @OneToOne(cascade = {CascadeType.PERSIST})
+    @JoinColumn(name = "id_user")
     private Client client;
 
     public BorrowInfo() {

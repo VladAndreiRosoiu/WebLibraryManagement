@@ -8,16 +8,10 @@ import ro.var.libmngmt.models.book.Author;
 import ro.var.libmngmt.models.book.Book;
 import ro.var.libmngmt.models.book.Genre;
 import ro.var.libmngmt.models.user.Client;
-import ro.var.libmngmt.repository.AuthorRepository;
-import ro.var.libmngmt.repository.BookRepository;
-import ro.var.libmngmt.repository.BorrowHistoryRepository;
-import ro.var.libmngmt.repository.ClientRepository;
+import ro.var.libmngmt.repository.*;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,6 +25,8 @@ public class LibraryService {
     BorrowHistoryRepository borrowHistoryRepository;
     @Autowired
     AuthorRepository authorRepository;
+    @Autowired
+    GenreRepository genreRepository;
     Transaction transaction;
 
     public List<Book> getBooks() {
@@ -54,38 +50,28 @@ public class LibraryService {
     }
 
     public List<Book> findBooksByAuthor(String keyword) {
-        List<Book> bookList = new ArrayList<>();
-        for (Book book : bookRepository.findAll()) {
-            for (Author author : book.getAuthors()) {
-                if (author.getFirstName().equalsIgnoreCase(keyword) || author.getLastName().equalsIgnoreCase(keyword)) {
-                    bookList.add(book);
-                }
-            }
+        List<Book> books = new ArrayList<>();
+        for(Author author:authorRepository.findAuthorsByName(keyword)){
+            books.addAll(author.getBooks());
         }
-        return bookList;
+        return books;
     }
 
     public List<Book> findBooksByTitle(String keyword) {
-        return bookRepository.findAll()
-                .stream()
-                .filter(book -> book.getTitle().toLowerCase(Locale.ROOT).contains(keyword.toLowerCase(Locale.ROOT)))
-                .collect(Collectors.toList());
+        return bookRepository.findBooksByTitle(keyword);
     }
 
     public List<Book> findBooksByGenre(String keyword) {
-        List<Book> bookList = new ArrayList<>();
-        for (Book book : bookRepository.findAll()) {
-            for (Genre genre : book.getGenres()) {
-                if (genre.getGenreType().toLowerCase(Locale.ROOT).contains(keyword.toLowerCase(Locale.ROOT))) {
-                    bookList.add(book);
-                }
-            }
+        HashSet<Book> books = new HashSet<>();
+        for(Genre genre : genreRepository.findGenres(keyword)){
+            books.addAll(genre.getBooks());
         }
-        return bookList;
+        return new ArrayList<>(books);
     }
 
     public Book findBookByIsbn(long isbn) {
-        return bookRepository.findAll().stream().filter(book -> book.getIsbn() == isbn).findFirst().orElse(null);
+        System.out.println(isbn);
+        return bookRepository.findByISBN(isbn);
     }
 
     public boolean hasBookCurrentlyBorrowed(String username) {
@@ -111,17 +97,19 @@ public class LibraryService {
     }
 
     public boolean borrowBook(String username, int bookId) {
-        Optional<Book> bookOptional = bookRepository.findById(bookId);
-        Optional<BorrowInfo> borrowHistoryOptional = clientRepository.findClientByUsername(username)
-                .getBorrowHistory()
-                .stream()
-                .filter(borrowInfo1 -> borrowInfo1.getReturnedOn() == null)
-                .findFirst();
-        Client client = clientRepository.findClientByUsername(username);
-        if (!borrowHistoryOptional.isPresent() && bookOptional.isPresent()) {
-            borrowHistoryRepository.save(new BorrowInfo(bookOptional.get(), client, LocalDate.now()));
+        if (!hasBookCurrentlyBorrowed(username)) {
+            Optional<Book> bookOptional = bookRepository.findById(bookId);
+            Optional<BorrowInfo> borrowHistoryOptional = clientRepository.findClientByUsername(username)
+                    .getBorrowHistory()
+                    .stream()
+                    .filter(borrowInfo1 -> borrowInfo1.getReturnedOn() == null)
+                    .findFirst();
+            Client client = clientRepository.findClientByUsername(username);
+            if (!borrowHistoryOptional.isPresent() && bookOptional.isPresent()) {
+                borrowHistoryRepository.save(new BorrowInfo(bookOptional.get(), client, LocalDate.now()));
+            }
             return true;
-        } else {
+        }else {
             System.out.println("ALREADY HAVE BORROWED BOOK");
             return false;
         }

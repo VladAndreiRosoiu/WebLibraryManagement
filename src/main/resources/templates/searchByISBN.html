@@ -6,7 +6,7 @@
 </head>
 <body>
 <form th:action="@{/homepage/searchByISBN}" method="post">
-    Filter: <input type="number" name="keyword" id="keyword" size="50" th:value="${keyword}" required />
+    Filter: <input type="text" name="keyword" id="keyword" size="50" th:value="${keyword}" required />
     &nbsp;
     <input type="submit" value="Search" method="post" />
     &nbsp;
