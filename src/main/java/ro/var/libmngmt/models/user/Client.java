@@ -1,7 +1,8 @@
 package ro.var.libmngmt.models.user;
 
 
-import ro.var.libmngmt.models.BorrowHistory;
+import ro.var.libmngmt.models.BorrowInfo;
+import ro.var.libmngmt.models.book.Genre;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -11,23 +12,26 @@ import java.util.List;
 @DiscriminatorValue("ROLE_USER")
 public class Client extends User {
 
-    @OneToMany(cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_user")
-    private List<BorrowHistory> borrowHistory;
+    @ManyToMany(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "borrow_user",
+            joinColumns = {@JoinColumn(name = "id_user")},
+            inverseJoinColumns = {@JoinColumn(name = "id_borrow_info")})
+    private List<BorrowInfo> borrowInfoList;
 
     public Client() {
     }
 
-    public Client(int id, String firstName, String lastName, String username, String password, String email, LocalDate registeredOn, List<BorrowHistory> borrowHistory) {
+    public Client(int id, String firstName, String lastName, String username, String password, String email, LocalDate registeredOn, List<BorrowInfo> borrowInfoList) {
         super(id, firstName, lastName, username, password, email, registeredOn);
-        this.borrowHistory = borrowHistory;
+        this.borrowInfoList = borrowInfoList;
     }
 
-    public List<BorrowHistory> getBorrowHistory() {
-        return borrowHistory;
+    public List<BorrowInfo> getBorrowHistory() {
+        return borrowInfoList;
     }
 
-    public void setBorrowHistory(List<BorrowHistory> borrowHistory) {
-        this.borrowHistory = borrowHistory;
+    public void setBorrowHistory(List<BorrowInfo> borrowInfoList) {
+        this.borrowInfoList = borrowInfoList;
     }
 }

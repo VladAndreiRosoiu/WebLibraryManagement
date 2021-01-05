@@ -1,3 +1,4 @@
+DROP SCHEMA IF EXISTS libraryWebDB;
 CREATE SCHEMA libraryWebDB;
 USE libraryWebDB;
 
@@ -18,13 +19,13 @@ first_name VARCHAR(255) NOT NULL,
 last_name VARCHAR(255) NOT NULL,
 additional_info VARCHAR(1000),
 birth_date DATE NOT NULL,
-can_be_displayed BOOLEAN DEFAULT TRUE,
+enabled BOOLEAN DEFAULT TRUE,
 CONSTRAINT author_cons UNIQUE (first_name, last_name, birth_date));
 
-CREATE TABLE genre(
+CREATE TABLE genres(
 id INT PRIMARY KEY AUTO_INCREMENT,
 genre_type VARCHAR (255) NOT NULL UNIQUE,
-can_be_displayed BOOLEAN DEFAULT TRUE);
+enabled BOOLEAN DEFAULT TRUE);
 
 CREATE TABLE books(
 id INT PRIMARY KEY AUTO_INCREMENT,
@@ -32,10 +33,9 @@ book_title VARCHAR(255) NOT NULL,
 isbn BIGINT UNIQUE,
 stock INT NOT NULL,
 release_date DATE NOT NULL,
-can_be_displayed BOOLEAN DEFAULT TRUE);
+enabled BOOLEAN DEFAULT TRUE);
 
 CREATE TABLE book_author(
-id INT PRIMARY KEY AUTO_INCREMENT,
 id_book INT NOT NULL,
 id_author INT NOT NULL,
 FOREIGN KEY (id_book) REFERENCES books(id),
@@ -43,24 +43,30 @@ FOREIGN KEY (id_author) REFERENCES authors(id),
 CONSTRAINT book_author_constr UNIQUE (id_book, id_author));
 
 CREATE TABLE book_genre(
-id INT PRIMARY KEY AUTO_INCREMENT,
 id_book INT NOT NULL,
 id_genre INT NOT NULL,
-CONSTRAINT book_genre_constr UNIQUE (id_book, id_genre),
 FOREIGN KEY (id_book) REFERENCES books(id),
-FOREIGN KEY (id_genre) REFERENCES genre(id));
+FOREIGN KEY (id_genre) REFERENCES genres(id),
+CONSTRAINT book_genre_constr UNIQUE (id_book, id_genre)
+);
 
 CREATE TABLE borrow_info(
 id INT PRIMARY KEY AUTO_INCREMENT,
 id_book INT NOT NULL,
-id_user INT NOT NULL,
 borrowed_on DATE NOT NULL,
 returned_on DATE,
-FOREIGN KEY (id_book) REFERENCES books(id),
-FOREIGN KEY (id_user) REFERENCES users(id)
+FOREIGN KEY (id_book) REFERENCES books(id)
 );
 
-INSERT INTO libraryWebDB.authors(first_name, last_name, additional_info, birth_date )
+CREATE TABLE borrow_user(
+id_user INT NOT NULL,
+id_borrow_info INT NOT NULL,
+FOREIGN KEY (id_user) REFERENCES users(id),
+FOREIGN KEY (id_borrow_info) REFERENCES borrow_info(id),
+CONSTRAINT borrow_user_constr UNIQUE (id_user, id_borrow_info)
+);
+
+INSERT INTO libraryWebDB.authors (first_name, last_name, additional_info, birth_date)
 VALUES
 ('Naomi', 'Novik' , 'Naomi Novik is an American author of speculative fiction. Novik won both the Nebula Award for Best Novel and the Mythopoeic Fantasy Award in 2016 for her novel Uprooted.', '1973-04-30'),
 ('Roshani', 'Chokshi', 'Roshani Chokshi is an American children\' book author and a New York Times bestselling author.' , '1991-02-14'),
@@ -76,17 +82,17 @@ VALUES
 ('Andrew', 'Delbanco', 'Andrew H. Delbanco is the Alexander Hamilton Professor of American Studies at Columbia University. He is the author of several books, including College: What It Was, Is, and Should Be, which has been translated into Chinese, Korean, Turkish, Russian, and Hebrew. ', '1952-02-20'),
 ('Rockwell', 'Kent', 'Rockwell Kent was an American painter, printmaker, illustrator, writer, sailor, adventurer and voyager.', '1882-06-21');
 
-INSERT INTO libraryWebDB.books(book_title, isbn, stock, release_date)
+INSERT INTO libraryWebDB.books (book_title, isbn, stock, release_date)
 VALUES
 ('A Deadly Education', 9780593128480, 10, '2020-09-29'),
-('The Silvered Serpents', 9781250144577, 5, '2020-09-22'),
-('All the Light We Cannot See', 9781476746586, 30, '2014-05-01'),
-('The Book Thief', 9780375831003, 13, '2006-03-14'),
-('Pride and Prejudice', 9780679783268, 50, '2000-10-10'),
-('Where the Crawdads Sing', 9780735219113, 3, '2018-08-14'),
-('The Silent Patient', 9781250301697, 8, '2019-02-05'),
-('Nineteen Eighty-Four', 9780452284234, 100, '2003-05-06'),
-('Moby-Dick or, the Whale', 9780142437247, 66, '2003-02-21');
+('The Silvered Serpents', 9781250144577, 50, '2020-09-22'),
+('All the Light We Cannot See', 9781476746586, 15, '2014-05-01'),
+('The Book Thief', 9780375831003, 44, '2006-03-14'),
+('Pride and Prejudice', 9780679783268, 70, '2000-10-10'),
+('Where the Crawdads Sing', 9780735219113, 12, '2018-08-14'),
+('The Silent Patient', 9781250301697, 99, '2019-02-05'),
+('Nineteen Eighty-Four', 9780452284234, 17,  '2003-05-06'),
+('Moby-Dick or, the Whale', 9780142437247, 48,  '2003-02-21');
 
 INSERT INTO libraryWebDB.book_author (id_book, id_author)
 VALUES
@@ -105,7 +111,7 @@ VALUES
 (9,12),
 (9,13);
 
-INSERT INTO libraryWebDB.genre (genre_type)
+INSERT INTO libraryWebDB.genres (genre_type)
 VALUES
 ('Science Fiction'),
 ('Magical Realism'),
@@ -174,19 +180,32 @@ VALUES
 ('Young', 'Mayer', 'youngmayer', '$2a$10$Smbm8FBRFuef5W9tE49O4u/0DboarKRsVYTE.W5V2F0jv7tBaVXoK', 'ROLE_USER','mayer@ymail.com', '2020-08-01'),
 ('Edmund', 'Kozey', 'edkozey', '$2a$10$Rg0scqDBmofJoByw4hSlNu85YPc6i8SjHh4CVP87k5UKkYf6DAw7q', 'ROLE_USER', 'ed@gmail.com', '2014-09-03');
 
-INSERT INTO libraryWebDB.borrow_info(id_book,id_user, borrowed_on, returned_on) VALUES
-(2,1,'2017-10-01','2017-10-14'),
-(9,1,'2017-11-02','2017-11-30'),
-(3,3,'2018-05-01','2018-05-30'),
-(4,4,'2019-01-05','2019-01-28'),
-(8,4,'2020-03-15','2020-04-01'),
-(2,1,'2018-11-19','2018-11-25'),
-(2,1,'2020-04-20','2020-05-05'),
-(7,3,'2020-08-01','2020-08-15');
+INSERT INTO libraryWebDB.borrow_info(id_book, borrowed_on, returned_on) VALUES
+(2,'2017-10-01','2017-10-14'),
+(9,'2017-11-02','2017-11-30'),
+(3,'2018-05-01','2018-05-30'),
+(4,'2019-01-05','2019-01-28'),
+(8,'2020-03-15','2020-04-01'),
+(2,'2018-11-19','2018-11-25'),
+(2,'2020-04-20','2020-05-05'),
+(7,'2020-08-01','2020-08-15');
 
-INSERT INTO libraryWebDB.borrow_info(id_book,id_user, borrowed_on) VALUES
-(6,1,'2020-10-01'),
-(4,3,'2020-10-10');
+INSERT INTO libraryWebDB.borrow_info(id_book, borrowed_on) VALUES
+(6,'2020-10-01'),
+(4,'2020-10-10');
+
+INSERT INTO libraryWebDB.borrow_user(id_user, id_borrow_info)
+VALUES
+(1, 1),
+(1, 2),
+(3, 3),
+(4, 4),
+(4, 5),
+(1, 6),
+(1, 7),
+(3, 8),
+(1,9),
+(3,10);
 
 UPDATE libraryWebDB.books
 SET stock = (stock-1)

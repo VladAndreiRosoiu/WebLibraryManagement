@@ -22,10 +22,10 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="borrowHistory: ${borrowHistory}">
-            <td th:text="${borrowHistory.book.title}">Book Title</td>
-            <td th:text="${borrowHistory.borrowedOn}">Borrowed On</td>
-            <td th:text="${borrowHistory.returnedOn}">Returned On</td>
+        <tr th:each="borrowInfo: ${borrowInfo}">
+            <td th:text="${borrowInfo.book.title}">Book Title</td>
+            <td th:text="${borrowInfo.borrowedOn}">Borrowed On</td>
+            <td th:text="${borrowInfo.returnedOn}">Returned On</td>
         </tr>
         </tbody>
     </table>

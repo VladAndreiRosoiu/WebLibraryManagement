@@ -31,7 +31,7 @@
             <td th:text="${client.email}">User Email</td>
             <td th:text="${client.registeredOn}">Registered On</td>
             <td >
-            <a th:href="@{/homepage/borrowHistory/{id}(id=${client.id})}" class="mr-2">Borrow History </a>
+            <a th:href="@{/homepage/borrowInfo/{id}(id=${client.id})}" class="mr-2">Borrow History </a>
             </td>
         </tr>
         </tbody>

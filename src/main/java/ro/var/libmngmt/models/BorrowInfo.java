@@ -8,38 +8,40 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name = "borrow_info")
-public class BorrowHistory {
+public class BorrowInfo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true)
     private int id;
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_book", unique = false)
+    @JoinColumn(name = "id_book")
     private Book book;
-    @OneToOne(cascade = {CascadeType.PERSIST})
-    @JoinColumn(name = "id_user", unique = false)
-    private Client client;
     @Column(name = "borrowed_on")
     private LocalDate borrowedOn;
     @Column(name = "returned_on")
     private LocalDate returnedOn;
+    @OneToOne(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "borrow_user",
+            joinColumns = {@JoinColumn(name = "id_user")},
+            inverseJoinColumns = {@JoinColumn(name = "id")})
+    private Client client;
 
-    public BorrowHistory() {
+    public BorrowInfo() {
     }
 
-    public BorrowHistory(Book book, Client client, LocalDate borrowedOn) {
+    public BorrowInfo(Book book, Client client, LocalDate borrowedOn) {
         this.book = book;
         this.client = client;
-        this.borrowedOn=borrowedOn;
-
+        this.borrowedOn = borrowedOn;
     }
-    public BorrowHistory(Book book, Client client, LocalDate borrowedOn, LocalDate returnedOn) {
+
+    public BorrowInfo(Book book, Client client, LocalDate borrowedOn, LocalDate returnedOn) {
         this.book = book;
         this.client = client;
-        this.borrowedOn=borrowedOn;
-        this.returnedOn=returnedOn;
-
+        this.borrowedOn = borrowedOn;
+        this.returnedOn = returnedOn;
     }
 
     public int getId() {

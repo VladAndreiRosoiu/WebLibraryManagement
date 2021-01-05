@@ -8,7 +8,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-
 import org.springframework.web.bind.annotation.RequestMapping;
 import ro.var.libmngmt.exceptions.BookNotFoundEx;
 import ro.var.libmngmt.exceptions.UserNotFoundEx;
@@ -59,16 +58,11 @@ public class ClientController {
 
     }
 
-    @GetMapping("/homepage/borrowHistory/{id}")
+    @GetMapping("/homepage/borrowInfo/{id}")
     public String getBorrowHistory(@PathVariable("id") Integer id, Model borrowHistory) {
         Client client = libraryService.findClientById(id);
-        if (client != null) {
-            borrowHistory.addAttribute("borrowHistory", client.getBorrowHistory());
-            return "viewBorrowHistory";
-        } else {
-            throw new UserNotFoundEx("User not found!");
-        }
-
+        borrowHistory.addAttribute("borrowInfo", client.getBorrowHistory());
+        return "viewBorrowHistory";
     }
 
     @GetMapping("/homepage/search")
@@ -125,24 +119,24 @@ public class ClientController {
     }
 
     @GetMapping("/homepage/returnBook")
-    public String returnBook(){
+    public String returnBook() {
         SecurityContext securityContext = SecurityContextHolder.getContext();
-        if (libraryService.hasBookCurrentlyBorrowed(securityContext.getAuthentication().getName())){
+        if (libraryService.hasBookCurrentlyBorrowed(securityContext.getAuthentication().getName())) {
             libraryService.returnBook(securityContext.getAuthentication().getName());
             System.out.println("Book returned");
             return "redirect:/homepage";
-        }else{
+        } else {
             System.out.println("No book to return!");
             return "redirect:/homepage";
         }
     }
 
     @GetMapping("/homepage/borrowBook/{id}")
-    public String borrowBook(@PathVariable("id") Integer id){
+    public String borrowBook(@PathVariable("id") Integer id) {
         SecurityContext securityContext = SecurityContextHolder.getContext();
-        if (libraryService.borrowBook(securityContext.getAuthentication().getName(), id)){
+        if (libraryService.borrowBook(securityContext.getAuthentication().getName(), id)) {
             return "redirect:/homepage";
-        }else {
+        } else {
             return "redirect:/homepage/viewclientdetails";
         }
     }
